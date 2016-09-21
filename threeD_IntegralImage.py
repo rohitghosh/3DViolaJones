@@ -43,8 +43,9 @@ class threeD_IntegralImage:
         @param bottomRight: (x,y) of the rectangle's bottom right corner
         '''
 
-        # swap tuples
-        topLeftBelow = (topLeftAbove[0], topLeftAbove[1], )
+        topLeftAbove = (int(topLeftAbove[0]), int(topLeftAbove[1]),int(topLeftAbove[2]))
+        bottomRightBelow = (int(bottomRightBelow[0]), int(bottomRightBelow[1]), int(bottomRightBelow[2]))
+        topLeftBelow = (topLeftAbove[0], topLeftAbove[1], bottomRightBelow[2] )
         bottomRightAbove= (bottomRightBelow[1], bottomRightBelow[0], topLeftAbove[2])
 
         if topLeftAbove == bottomRightBelow:

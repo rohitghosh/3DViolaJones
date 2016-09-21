@@ -15,7 +15,7 @@ class AdaBoost(object):
         Constructor
         '''
 
-def learn(positives, negatives, T):
+def learn(positives, negatives, T , threshold):
 
     # construct initial weights
     pos_weight = 1. / (2 * len(positives))
@@ -28,7 +28,7 @@ def learn(positives, negatives, T):
     # create column vector
     images = np.hstack((positives, negatives))
 
-    print 'Creating haar like features..'
+    print ('Creating haar like features..')
     features = []
     for f in threeDFeatureTypes:
         for width in range(f[0],15,f[0]):
@@ -37,22 +37,22 @@ def learn(positives, negatives, T):
                     for x in range(15-width):
                         for y in range(15-breadth):
                             for z in range(15-height):
-                                features.append(threeD_HaarLikeFeature(f, (x,y,z), width, breadth, height, 0, 1))
-    print '..done.\n' + str(len(features)) + ' features created.\n'
+                                features.append(threeD_HaarLikeFeature(f, (x,y,z), width, breadth, height, threshold , 1))
+    print ('..done.\n' + str(len(features)) + ' features created.\n')
 
-    print 'Calculating scores for features..'
+    print ('Calculating scores for features..')
     # dictionary of feature -> list of vote for each image: matrix[image, weight, vote])
     votes = dict()
     i = 0
     for feature in features:
         # calculate score for each image, also associate the image
-        feature_votes = np.array(map(lambda im: [im, feature.get_vote(im)], images))
+        feature_votes = np.array(list(map(lambda im: [im, feature.get_vote(im)], images)))
         votes[feature] = feature_votes
         i += 1
         if i % 1000 == 0:
             break   #@todo: remove
-            print str(i) + ' features of ' + str(len(features)) + ' done'
-    print '..done.\n'
+            print (str(i) + ' features of ' + str(len(features)) + ' done')
+    print ('..done.\n')
 
 
     # select classifiers
@@ -60,7 +60,7 @@ def learn(positives, negatives, T):
     classifiers = []
     used = []
 
-    print 'Selecting classifiers..'
+    print ('Selecting classifiers..')
     sys.stdout.write('[' + ' '*20 + ']\r')
     sys.stdout.flush()
     for i in range(T):
@@ -73,19 +73,19 @@ def learn(positives, negatives, T):
             image.set_weight(image.weight * norm_factor)
 
         # select best weak classifier
-        for feature, feature_votes in votes.iteritems():
+        for feature, feature_votes in votes.items():
 
             if feature in used:
                 continue
 
             # calculate error
-            error = sum(map(lambda im, vote: im.weight if im.label != vote else 0, feature_votes[:,0], feature_votes[:,1]))
+            error = sum(list(map(lambda im, vote: im.weight if im.label != vote else 0, feature_votes[:,0], feature_votes[:,1])))
             # map error -> feature, use error as key to select feature with
             # smallest error later
             classification_errors[error] = feature
 
         # get best feature, i.e. with smallest error
-        errors = classification_errors.keys()
+        errors = list(classification_errors.keys())
         best_error = errors[np.argmin(errors)]
         feature = classification_errors[best_error]
         used.append(feature)
@@ -103,8 +103,8 @@ def learn(positives, negatives, T):
             else:
                 im.set_weight(im.weight * np.sqrt(best_error/(1-best_error)))
 
-        sys.stdout.write('[' + '='*(((i+1)*20)/T) + ' '*(20-(((i+1)*20)/T)) + ']\r')
+        sys.stdout.write('[' + '='*int(((i+1)*20)/T) + ' '*int(20-(((i+1)*20)/T)) + ']\r')
         sys.stdout.flush()
-    print '..done.\n'
+    print ('..done.\n')
 
     return classifiers
