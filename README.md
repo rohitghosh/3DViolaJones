@@ -18,19 +18,19 @@ This software uses a single Adaboost classifier for trainig purposes. The cascad
 #### Methodology
 
 2D Object detection was based on the famous Viola-Jones [paper](/resources/2d_haar_facedetection.pdf).
+
 3D object detection based on Haarlike features was used by Wesrag et al for organ detection, as part of the MICCAI Grand Challenge: Prostate MR Image Segmentation 2012. The Haarfeatures include the same fetures mentioned in the [paper](/resources/A Generic Approach to Organ Detection Using 3D Haar-Like Features .pdf)
 
 #### Object Detection
 
 The object detection scripts can be executed from root of the repository
-{% highlight js %}
+<code>
 //For running 2D object detection
 $: python 2D_HaarlikeFeatures/ViolaJones.py
 
 // For running 3D object detection
 $:python 3D_HaarlikeFeatures/threeD_violajones.py
-
-{% endhighlight %}
+</code>
 
 #### Results
 
