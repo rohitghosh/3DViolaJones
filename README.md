@@ -24,11 +24,14 @@ This software uses a single Adaboost classifier for trainig purposes. The cascad
 #### Object Detection
 
 The object detection scripts can be executed from root of the repository
+
 <code>
 //For running 2D object detection
+
 $: python 2D_HaarlikeFeatures/ViolaJones.py
 
 // For running 3D object detection
+
 $:python 3D_HaarlikeFeatures/threeD_violajones.py
 </code>
 
